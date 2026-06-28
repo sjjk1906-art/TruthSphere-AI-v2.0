@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<!-- saved from url=(0081)file:///C:/Users/Siddhi/OneDrive/Documents/Fack_news_detector/Frontend/Index.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌐 TruthSphere AI v2.0 - Fake News &amp; Image Detector</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        .main-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            padding: 15px 30px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: #666;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            color: #667eea;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* INPUT AREA */
+        .input-area {
+            margin-bottom: 30px;
+        }
+
+        .input-area h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 150px;
+            transition: border-color 0.3s;
+        }
+
+        .textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+
+        /* IMAGE UPLOAD */
+        .image-upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            background: #f5f7fa;
+            margin-bottom: 20px;
+        }
+
+        .image-upload-area:hover {
+            background: #e8ebf7;
+            border-color: #764ba2;
+        }
+
+        .image-upload-area.has-image {
+            border-style: solid;
+            padding: 10px;
+        }
+
+        .upload-placeholder p {
+            color: #667eea;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .upload-hint {
+            color: #999 !important;
+            font-size: 0.9em !important;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 8px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        /* BUTTONS */
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #667eea;
+            color: white;
+        }
+
+        /* ALERTS */
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+        }
+
+        /* RESULTS */
+        .results-section {
+            margin-top: 30px;
+        }
+
+        .results-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .result-card {
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 6px solid;
+        }
+
+        .result-card.real {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border-left-color: #28a745;
+        }
+
+        .result-card.fake {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border-left-color: #dc3545;
+        }
+
+        .result-header h3 {
+            font-size: 1.8em;
+            margin-bottom: 8px;
+        }
+
+        .result-prediction {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        /* SCORE SECTION */
+        .credibility-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .score-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .score-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* STATS */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        /* REASONS */
+        .reasons-section {
+            background: #f0f7ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .reasons-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .reasons-list {
+            list-style: none;
+        }
+
+        .reasons-list li {
+            padding: 10px 0;
+            color: #555;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .reasons-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* ANALYSIS */
+        .analysis-section {
+            background: #faf5ff;
+            border-left: 4px solid #9b59b6;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .analysis-section h3 {
+            color: #9b59b6;
+            margin-bottom: 15px;
+        }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .analysis-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #9b59b6;
+        }
+
+        .analysis-item h4 {
+            color: #9b59b6;
+            margin-bottom: 8px;
+        }
+
+        .analysis-item p {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        /* IMAGE PREVIEW IN RESULTS */
+        .result-image-preview {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .result-image-preview img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* RED FLAGS */
+        .red-flags-section {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .red-flags-section h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .red-flags-list {
+            list-style: none;
+        }
+
+        .red-flags-list li {
+            padding: 8px 0;
+            color: #856404;
+            border-bottom: 1px solid rgba(132, 100, 4, 0.2);
+        }
+
+        /* FOOTER */
+        .footer {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer p {
+            color: #555;
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        /* LOADING SPINNER */
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 10px 15px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <h1>🌐 TruthSphere AI v2.0</h1>
+            <p>Detect Fake News &amp; Deepfake Images with AI</p>
+        </header>
+
+        <!-- MAIN SECTION -->
+        <div class="main-section">
+            <!-- TABS -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab(&#39;text&#39;)">
+                    📰 Check Text
+                </button>
+                <button class="tab-btn" onclick="switchTab(&#39;image&#39;)">
+                    📸 Check Image
+                </button>
+            </div>
+
+            <!-- TEXT TAB -->
+            <div id="text-tab" class="tab-content active">
+                <div class="input-area">
+                    <h2>📰 Paste Article Text</h2>
+                    <textarea id="articleInput" placeholder="Paste your article text here..."></textarea>
+
+                    <div class="button-group">
+                        <button onclick="checkNews()" id="checkTextBtn" class="btn btn-primary">
+                            ✓ Check News
+                        </button>
+                        <button onclick="clearText()" class="btn btn-secondary">
+                            🗑️ Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- IMAGE TAB -->
+            <div id="image-tab" class="tab-content">
+                <div class="input-area">
+                    <h2>📸 Upload Image &amp; Describe It</h2>
+                    <div class="image-upload-area" id="imageUploadArea" onclick="document.getElementById(&#39;imageInput&#39;).click()">
+                        <div class="upload-placeholder" id="uploadPlaceholder">
+                            <p>📁 Click to upload or drag &amp; drop</p>
+                            <p class="upload-hint">Supported: JPG, PNG, GIF, WebP</p>
+                        </div>
+                        <img id="imagePreview" style="display: none;" class="image-preview">
+                        <input type="file" id="imageInput" class="file-input" accept="image/*" onchange="handleImageSelect(event)">
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <label style="display: block; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                            📝 What is this image about? (Help us find supporting articles)
+                        </label>
+                        <textarea id="imageDescription" placeholder="e.g., &#39;COVID vaccine causes magnetism&#39; or &#39;Election fraud evidence&#39;" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1em; min-height: 80px;"></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button onclick="checkImage()" id="checkImageBtn" class="btn btn-primary" disabled="">
+                            ✓ Check Image
+                        </button>
+                        <button onclick="clearImage()" class="btn btn-secondary">
+                            🗑️ Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ERROR MESSAGE -->
+            <div id="errorMessage" style="display: none;" class="alert alert-error"></div>
+
+            <!-- LOADING MESSAGE -->
+            <div id="loadingMessage" style="display: none;">
+                <div class="spinner"></div>
+                <p style="text-align: center; color: #667eea;">Analyzing... Please wait...</p>
+            </div>
+
+            <!-- RESULTS -->
+            <div id="resultsContainer">
+                <div class="results-section">
+                    <h2>📊 Analysis Results</h2>
+
+                    <div class="result-card real">
+                        <div class="result-header">
+                            <h3>✅ LIKELY AUTHENTIC</h3>
+                            <p class="result-prediction">Likely Authentic</p>
+                        </div>
+
+                        <div class="credibility-section">
+                            <div class="score-label">Credibility Score</div>
+                            <div class="score-value">
+                                <span style="color: #ffc107">
+                                    50%
+                                </span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 50%; background: #ffc107"></div>
+                            </div>
+                        </div>
+
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <span class="stat-label">Confidence</span>
+                                <span class="stat-value">50%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="reasons-section">
+                        <h3>💡 Summary</h3>
+                        <p>✅ This article appears to be AUTHENTIC (Credibility: 40%)</p>
+                    </div>
+                    
+
+                    
+                    <div class="reasons-section">
+                        <h3>🔍 Key Reasons</h3>
+                        <ul class="reasons-list">
+                            
+                                <li>✓ Article is very short (may lack important context)</li>
+                            
+                                <li>✓ Supporting evidence found from credible news sources</li>
+                            
+                                <li>✓ AI model indicates uncertain authenticity (requires verification)</li>
+                            
+                        </ul>
+                    </div>
+                    
+
+                    
+
+                    
+                    <div class="reasons-section">
+                        <h3>📰 Supporting Evidence</h3>
+                        <p>Found 3 supporting articles</p>
+                        <div style="margin-top: 15px;">
+                            
+                                <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #667eea;">
+                                    <h4 style="color: #667eea; margin-bottom: 8px;">Latest news about earth</h4>
+                                    <p><strong>📌 Source:</strong> BBC News</p>
+                                    <p style="color: #666; margin: 8px 0;">Recent developments regarding earth...</p>
+                                    <p style="font-size: 0.9em; color: #999;">📅 27/6/2026</p>
+                                    <a href="https://bbc.com/" target="_blank" style="color: #667eea; text-decoration: none; font-weight: bold;">🔗 Read Full Article →</a>
+                                </div>
+                            
+                                <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #667eea;">
+                                    <h4 style="color: #667eea; margin-bottom: 8px;">Analysis: earth trends</h4>
+                                    <p><strong>📌 Source:</strong> Reuters</p>
+                                    <p style="color: #666; margin: 8px 0;">Expert analysis on earth in the news...</p>
+                                    <p style="font-size: 0.9em; color: #999;">📅 26/6/2026</p>
+                                    <a href="https://reuters.com/" target="_blank" style="color: #667eea; text-decoration: none; font-weight: bold;">🔗 Read Full Article →</a>
+                                </div>
+                            
+                                <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #667eea;">
+                                    <h4 style="color: #667eea; margin-bottom: 8px;">earth - What you need to know</h4>
+                                    <p><strong>📌 Source:</strong> AP News</p>
+                                    <p style="color: #666; margin: 8px 0;">Complete guide to understanding earth...</p>
+                                    <p style="font-size: 0.9em; color: #999;">📅 25/6/2026</p>
+                                    <a href="https://apnews.com/" target="_blank" style="color: #667eea; text-decoration: none; font-weight: bold;">🔗 Read Full Article →</a>
+                                </div>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p>⚠️ Always verify important information with official sources</p>
+            <p>🔐 TruthSphere AI v2.0 | Made for Hackathons</p>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // ==========================================
+        // 🔴 IMPORTANT: CHANGE THIS TO YOUR BACKEND URL
+        // ==========================================
+        
+        const API_BASE_URL = 'http://localhost:5000/api';
+        
+        // 🌍 When deployed to Heroku, change to:
+        // const API_BASE_URL = 'https://truthsphere-ai-yourname.herokuapp.com/api';
+
+        let currentImageFile = null;
+
+        // ==========================================
+        // TAB SWITCHING
+        // ==========================================
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+
+            // Clear previous results
+            document.getElementById('resultsContainer').innerHTML = '';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        // ==========================================
+        // TEXT CHECKING
+        // ==========================================
+
+        async function checkNews() {
+            const text = document.getElementById('articleInput').value.trim();
+
+            if (!text) {
+                showError('❌ Please enter article text');
+                return;
+            }
+
+            await analyzeText(text);
+        }
+
+        async function analyzeText(text) {
+            try {
+                showLoading(true);
+                hideError();
+
+                console.log('📡 Checking text...');
+                console.log('🔗 API URL:', API_BASE_URL + '/check-news');
+
+                const response = await fetch(`${API_BASE_URL}/check-news`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ text }),
+                });
+
+                const data = await response.json();
+                console.log('📥 Full Response:', data);
+                console.log('📰 Evidence Data:', data.evidence);
+                console.log('📰 Evidence Found?', data.evidence?.evidence_found);
+                console.log('📰 Articles Count:', data.evidence?.articles?.length);
+                console.log('📰 Articles:', data.evidence?.articles);
+
+                if (response.ok) {
+                    displayTextResults(data);
+                } else {
+                    showError(`❌ ${data.error || 'Error checking news'}`);
+                }
+            } catch (err) {
+                console.error('❌ Error:', err);
+                showError(`⚠️ Cannot connect to server!\n\nMake sure:\n1. Backend is running: python app_v2.py\n2. Port is 5000\n3. API URL is correct\n\nError: ${err.message}`);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function displayTextResults(data) {
+            const html = `
+                <div class="results-section">
+                    <h2>📊 Analysis Results</h2>
+
+                    <div class="result-card ${data.is_fake ? 'fake' : 'real'}">
+                        <div class="result-header">
+                            <h3>${data.is_fake ? '❌ LIKELY MISLEADING' : '✅ LIKELY AUTHENTIC'}</h3>
+                            <p class="result-prediction">${data.prediction}</p>
+                        </div>
+
+                        <div class="credibility-section">
+                            <div class="score-label">Credibility Score</div>
+                            <div class="score-value">
+                                <span style="color: ${getCredibilityColor(data.credibility_score)}">
+                                    ${data.credibility_score}%
+                                </span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${Math.max(data.credibility_score, 5)}%; background: ${getCredibilityColor(data.credibility_score)}"></div>
+                            </div>
+                        </div>
+
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <span class="stat-label">Confidence</span>
+                                <span class="stat-value">${data.confidence}%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    ${data.explanation_summary ? `
+                    <div class="reasons-section">
+                        <h3>💡 Summary</h3>
+                        <p>${data.explanation_summary}</p>
+                    </div>
+                    ` : ''}
+
+                    ${data.explanation && Array.isArray(data.explanation) && data.explanation.length > 0 ? `
+                    <div class="reasons-section">
+                        <h3>🔍 Key Reasons</h3>
+                        <ul class="reasons-list">
+                            ${data.explanation.map(reason => `
+                                <li>✓ ${reason.text}</li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+
+                    ${data.google_factcheck && data.google_factcheck.found ? `
+                    <div class="reasons-section">
+                        <h3>✅ Google Fact Check</h3>
+                        <p><strong>Claim:</strong> ${data.google_factcheck.claim}</p>
+                        <p><strong>Rating:</strong> ${data.google_factcheck.rating}</p>
+                        <p><strong>Reviewer:</strong> ${data.google_factcheck.reviewer}</p>
+                    </div>
+                    ` : ''}
+
+                    ${data.evidence && data.evidence.evidence_found && data.evidence.articles && data.evidence.articles.length > 0 ? `
+                    <div class="reasons-section">
+                        <h3>📰 Supporting Evidence</h3>
+                        <p>${data.evidence.message}</p>
+                        <div style="margin-top: 15px;">
+                            ${data.evidence.articles.map(article => `
+                                <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #667eea;">
+                                    <h4 style="color: #667eea; margin-bottom: 8px;">${article.title}</h4>
+                                    <p><strong>📌 Source:</strong> ${article.source}</p>
+                                    <p style="color: #666; margin: 8px 0;">${article.description}</p>
+                                    <p style="font-size: 0.9em; color: #999;">📅 ${new Date(article.published_at).toLocaleDateString()}</p>
+                                    ${article.url ? `<a href="${article.url}" target="_blank" style="color: #667eea; text-decoration: none; font-weight: bold;">🔗 Read Full Article →</a>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+
+            document.getElementById('resultsContainer').innerHTML = html;
+        }
+
+        // ==========================================
+        // IMAGE CHECKING
+        // ==========================================
+
+        function handleImageSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                currentImageFile = file;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+
+                    document.getElementById('uploadPlaceholder').style.display = 'none';
+                    document.getElementById('imageUploadArea').classList.add('has-image');
+                    document.getElementById('checkImageBtn').disabled = false;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        async function checkImage() {
+            const description = document.getElementById('imageDescription').value.trim();
+            
+            if (!currentImageFile) {
+                showError('❌ Please select an image');
+                return;
+            }
+
+            if (!description) {
+                showError('❌ Please describe what the image is about');
+                return;
+            }
+
+            try {
+                showLoading(true);
+                hideError();
+
+                console.log('📸 Checking image...');
+
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    const imageData = e.target.result;
+
+                    const response = await fetch(`${API_BASE_URL}/check-image`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ 
+                            image: imageData,
+                            description: description  // ← Send description!
+                        }),
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        displayImageResults(data, imageData);
+                    } else {
+                        showError(`❌ ${data.error || 'Error checking image'}`);
+                    }
+
+                    showLoading(false);
+                };
+                reader.readAsDataURL(currentImageFile);
+            } catch (err) {
+                console.error('❌ Error:', err);
+                showError(`Error: ${err.message}`);
+                showLoading(false);
+            }
+        }
+
+        function displayImageResults(data, imagePreviewData) {
+            const html = `
+                <div class="results-section">
+                    <h2>📊 Image Analysis Results</h2>
+
+                    <div class="result-image-preview">
+                        <img src="${imagePreviewData}" />
+                    </div>
+
+                    <div class="result-card ${data.is_manipulated ? 'fake' : 'real'}">
+                        <div class="result-header">
+                            <h3>${data.is_manipulated ? '❌ LIKELY MANIPULATED' : '✅ LIKELY AUTHENTIC'}</h3>
+                            <p class="result-prediction">${data.recommendation}</p>
+                        </div>
+
+                        <div class="credibility-section">
+                            <div class="score-label">Authenticity Score</div>
+                            <div class="score-value">
+                                <span style="color: ${getAuthenticityColor(data.authenticity_score)}">
+                                    ${data.authenticity_score}%
+                                </span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${Math.max(data.authenticity_score, 5)}%; background: ${getAuthenticityColor(data.authenticity_score)}"></div>
+                            </div>
+                        </div>
+
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <span class="stat-label">Confidence</span>
+                                <span class="stat-value">${data.confidence}%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    ${data.image_info ? `
+                    <div class="analysis-section">
+                        <h3>📋 Image Information</h3>
+                        <div class="analysis-grid">
+                            ${Object.entries(data.image_info).map(([key, value]) => `
+                                <div class="analysis-item">
+                                    <h4>${key}</h4>
+                                    <p>${JSON.stringify(value)}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    ${data.analysis ? `
+                    <div class="analysis-section">
+                        <h3>🔬 Technical Analysis</h3>
+                        <div class="analysis-grid">
+                            ${Object.entries(data.analysis).map(([key, value]) => `
+                                <div class="analysis-item">
+                                    <h4>${key}</h4>
+                                    ${typeof value === 'object' && value !== null ? `
+                                        <p><strong>${value.status}</strong></p>
+                                        <p>${value.reason}</p>
+                                    ` : `<p>${value}</p>`}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    ${data.red_flags && data.red_flags.length > 0 ? `
+                    <div class="red-flags-section">
+                        <h3>⚠️ Red Flags (${data.red_flags.length})</h3>
+                        <ul class="red-flags-list">
+                            ${data.red_flags.map(flag => `
+                                <li><strong>${flag.type}:</strong> ${flag.reason}</li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+
+                    ${data.evidence && data.evidence.evidence_found && data.evidence.articles && data.evidence.articles.length > 0 ? `
+                    <div class="reasons-section">
+                        <h3>📰 Supporting Evidence</h3>
+                        <p>${data.evidence.message}</p>
+                        <div style="margin-top: 15px;">
+                            ${data.evidence.articles.map(article => `
+                                <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #667eea;">
+                                    <h4 style="color: #667eea; margin-bottom: 8px;">${article.title}</h4>
+                                    <p><strong>📌 Source:</strong> ${article.source}</p>
+                                    <p style="color: #666; margin: 8px 0;">${article.description}</p>
+                                    <p style="font-size: 0.9em; color: #999;">📅 ${new Date(article.published_at).toLocaleDateString()}</p>
+                                    ${article.url ? `<a href="${article.url}" target="_blank" style="color: #667eea; text-decoration: none; font-weight: bold;">🔗 Read Full Article →</a>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+
+            document.getElementById('resultsContainer').innerHTML = html;
+        }
+
+        // ==========================================
+        // HELPERS
+        // ==========================================
+
+        function getCredibilityColor(score) {
+            if (score >= 70) return '#28a745';
+            if (score >= 40) return '#ffc107';
+            return '#dc3545';
+        }
+
+        function getAuthenticityColor(score) {
+            if (score >= 80) return '#28a745';
+            if (score >= 60) return '#ffc107';
+            if (score >= 40) return '#ff9800';
+            return '#dc3545';
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function showLoading(show) {
+            document.getElementById('loadingMessage').style.display = show ? 'block' : 'none';
+        }
+
+        function clearText() {
+            document.getElementById('articleInput').value = '';
+            document.getElementById('resultsContainer').innerHTML = '';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function clearImage() {
+            currentImageFile = null;
+            document.getElementById('imageInput').value = '';
+            document.getElementById('imageDescription').value = '';  // ← Clear description too
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('uploadPlaceholder').style.display = 'block';
+            document.getElementById('imageUploadArea').classList.remove('has-image');
+            document.getElementById('checkImageBtn').disabled = true;
+            document.getElementById('resultsContainer').innerHTML = '';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        // ==========================================
+        // DRAG & DROP FOR IMAGE
+        // ==========================================
+
+        const uploadArea = document.getElementById('imageUploadArea');
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.background = '#e8ebf7';
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.background = '#f5f7fa';
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.background = '#f5f7fa';
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                document.getElementById('imageInput').files = files;
+                handleImageSelect({ target: { files } });
+            }
+        });
+    </script>
+
+</body></html>
